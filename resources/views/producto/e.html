@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>División Larga Paso a Paso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>División Larga Paso a Paso</h2>
+  
+  <label for="dividend">Dividendo:</label>
+  <input type="number" id="dividend">
+
+  <label for="divisor">Divisor:</label>
+  <input type="number" id="divisor">
+
+  <button onclick="performDivision()">Dividir</button>
+
+  <h3>Resultado:</h3>
+  <div id="steps"></div>
+
+  <script>
+    function performDivision() {
+      const dividend = document.getElementById('dividend').value;
+      const divisor = parseInt(document.getElementById('divisor').value);
+
+      if (isNaN(divisor) || divisor === 0) {
+        alert('Por favor, introduce un divisor válido y asegúrate de que no sea cero.');
+        return;
+      }
+
+      const steps = divide(dividend, divisor);
+
+      document.getElementById('steps').innerHTML = steps.join('<br>');
+    }
+
+    function divide(dividend, divisor) {
+      let steps = [];
+      let currentDividend = '';
+      let i = 0;
+
+      while (i < dividend.length) {
+        currentDividend += dividend[i];
+        let currentResult = parseInt(currentDividend) / divisor;
+
+        if (currentResult >= 1) {
+          let multiple = Math.floor(currentResult);
+          let product = multiple * divisor;
+          let remainder = currentDividend - product;
+
+          steps.push(`Tomamos ${currentDividend}, lo dividimos por ${divisor} (${multiple} veces). Resto: ${remainder}`);
+          currentDividend = remainder.toString();
+        } else {
+          steps.push(`Tomamos ${currentDividend}, el resultado es menor que 1.`);
+        }
+
+        i++;
+      }
+
+      return steps;
+    }
+  </script>
+</body>
+</html>
