@@ -47,3 +47,6 @@ Route::get("producto/eliminar",[ProductoController::class, "destroy"])->name("pr
 
 route::get("guardar/categoria/ajax",[CategoriaController::class,"guardadoajax"])->name("guardar.categoria.ajax");
 route::get("jalar/categorias",[CategoriaController::class,"entregarCategorias"])->name("jalar.categorias");
+
+
+Route::get("producto/guardar/ajax",[ProductoController::class, "GuardarAjaxProducto"])->name("producto.guardar.ajax");

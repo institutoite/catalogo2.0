@@ -6,10 +6,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
-    
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 @stop
 
@@ -117,8 +120,8 @@
             @include('producto.formajax')
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a id="guardarAjaxModal" class="btn btn-primary">Guardar</a>
         </div>
       </div>
     </div>
@@ -141,15 +144,43 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
+
+
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/buffer.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/filetype.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/piexif.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/sortable.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/fileinput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/locales/fr.js"></script>
+
+
+{{-- agregando funcionalidades a bootstrap --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function(){
-        
+        $("#fotos").fileinput(
+                {
+                maxFileCount: 5,
+                showUpload: false,
+                }
+            );
+
         // $("#productos").dataTable();
         new DataTable('#productos', {
             responsive: true,
             "lengthMenu": [[5, 10, 20,30,50,100, -1], [5, 10, 20,30,50,100, "Todos"]],
             
         });
+
+
+
+
+
 
         $("#crear_producto_modal").on("click",function(e){
             e.preventDefault();
@@ -191,7 +222,40 @@
             });
         });
 
+        $("#guardarAjaxModal").on("click",function(e){
+            e.preventDefault();
+            console.log("hiciste click en guardar ajax");
+            let nombreAenviar=$("#nombre").val();
+            let stockAenviar=$("#stock").val();
+            let precioAenviar=$("#precio").val();
+            let fechavencimientoAenviar=$("#fechavencimiento").val();
+            let fotoAenviar=$("#foto").val();
+            let videoAenviar=$("#video").val();
+            console.log("nombreAenviar:",nombreAenviar);
+            console.log("stockAenviar:",stockAenviar);
+            console.log("precioAenviar:",precioAenviar);
+            console.log("fechavencimientoAenviar:",fechavencimientoAenviar);
+            console.log("fotoAenviar:",fotoAenviar);
+            console.log("videoAenviar:",videoAenviar);
 
+
+            $.ajax({
+                url : "{{ route('producto.guardar.ajax')}}",
+                data : { 
+                    nombre :nombreAenviar,
+                    stock :stockAenviar,
+                    precio :precioAenviar,
+                    fechavencimiento:fechavencimientoAenviar,
+                },
+                type : 'GET',
+                success : function(json) {
+                    console.log(json);
+                },
+                error : function(xhr, status) {
+                    alert('Disculpe, existió un problema');
+                },
+            })
+        })
 
     })
     </script>

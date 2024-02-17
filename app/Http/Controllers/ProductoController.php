@@ -7,6 +7,7 @@ use App\Models\Categoria;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\StoreProductoRequest1;
 use App\Http\Requests\EliminarRequest;
+use App\Http\Requests\RequestAjax;
 use App\Http\Requests\UpdateProductoRequest;
 
 use Illuminate\Support\Facades\Storage;
@@ -156,6 +157,17 @@ class ProductoController extends Controller
     {
         $id_producto=$request->id_producto;
         return response()->json(["respuesta"=>"eliminado correctamente","id"=>$id_producto]);
+    }
+
+
+    /**%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  guadado con ajax %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+    public function GuardarAjaxProducto(RequestAjax $request){
+
+        $producto = new Producto();
+        $producto->nombre=$request->nombre;
+        
+        return response()->json($request->all());
+
     }
 
     
